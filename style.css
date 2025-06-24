@@ -2,7 +2,7 @@ body {
     background-color: #339c13;
     margin: 0;
     display: grid;
-    grid-template-rows: 100px auto 100px;
+    grid-template-rows: 50px auto 50px;
     grid-template-columns: 2fr 1fr 2fr;
     height: 100vh;
     width: 100vw;

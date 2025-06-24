@@ -25,28 +25,23 @@ const createGameBorder = () => {
 }
 createGameBorder()
 
-
-
-
-for(let i=0;i<horizontalSize;i++){
-    const cell = gameBoard.getElementsByClassName('b'+i)[0]
-    cell.setAttribute("id","sideButton")
-
+//a function that declares the side buttons by taking the horizontal size,vertical size and the boardsize;
+const declareSideButtons = (iteration,num, increase) => {
+    for (let i = iteration; i < num; i += increase) {
+        const cell = gameBoard.getElementsByClassName('b' + i)[0];
+            cell.setAttribute("id", "sideButton"); 
+            sideButtons.push(cell);
+            cell.style.backgroundColor = 'black';
+            console.log("Assigned ID 'sideButton' to cell at index " + i);
+    }
 }
-for(let i=0;i<boardSize;i+=17){
-    const cell = gameBoard.getElementsByClassName('b'+i)[0]
-    cell.setAttribute("id","sideButton")
 
-}
-for(let i=horizontalSize-1;i<boardSize;i+=17){
-    const cell = gameBoard.getElementsByClassName('b'+i)[0]
-    cell.setAttribute("id","sideButton")
 
-}
-for(let i = (verticalSize - 1) * horizontalSize; i < boardSize; i += 1){
-    const cell = gameBoard.getElementsByClassName('b'+i)[0]
-    cell.setAttribute("id","sideButton")
-}
+declareSideButtons(0,horizontalSize, 1); // First row
+declareSideButtons(0,boardSize, 17); // First column
+declareSideButtons(horizontalSize-1,boardSize, 17); // Last row
+declareSideButtons(((verticalSize - 1) * horizontalSize),boardSize, 1); // Last column
+
 
 ////////////////////////////////
 // Event Listeners Here

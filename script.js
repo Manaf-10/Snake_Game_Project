@@ -47,42 +47,26 @@ snake.setAttribute("id", "snake")
 middleButton.appendChild(snake)
 ////////////////////////////////
 // Event Listeners Here
-
-
-window.addEventListener('keydown',e=>{
-    if(e.code === 'KeyW' ){
+// a function that takes an input and the new vector the snake will be headed when that input is pressed
+const changePosition = (input,newPosition)=>{
+    window.addEventListener('keydown',e=>{
+    if(e.code === input ){
         const currnetIndex = parseInt(snake.parentElement.className)
-        const newIndex = currnetIndex - horizontalSize
+        const newIndex = currnetIndex + (newPosition)
         buttons[newIndex].appendChild(snake)
     }
 })
+}
+//when pressing a key the vector of the snake is changes
+changePosition('KeyW',-horizontalSize)//Moving Up
+changePosition('KeyS',horizontalSize)//Moving Down
+changePosition('KeyA',-1)//Moving Left
+changePosition('KeyD',1)//Moving Right
 
-window.addEventListener('keydown',e=>{
-    if(e.code === 'KeyS' ){
-        const currnetIndex = parseInt(snake.parentElement.className)
-        const newIndex = currnetIndex + horizontalSize 
-        buttons[newIndex].appendChild(snake)
-    }
-})
-
-window.addEventListener('keydown',e=>{
-    if(e.code === 'KeyA' ){
-        const currnetIndex = parseInt(snake.parentElement.className)
-        const newIndex = currnetIndex - 1
-        buttons[newIndex].appendChild(snake)
-    }
-})
-
-window.addEventListener('keydown',e=>{
-    if(e.code === 'KeyD' ){
-        const currnetIndex = parseInt(snake.parentElement.className)
-        const newIndex = currnetIndex + 1
-        buttons[newIndex].appendChild(snake)
-    }
-})
+changePosition('ArrowUp',-horizontalSize)//Moving Up
+changePosition('ArrowDown',horizontalSize)//Moving Moving Down
+changePosition('ArrowLeft',-1)//Moving Left
+changePosition('ArrowRight',1)//Moving Right
 
 
 // moveSnake()
-const currnetIndex = parseInt(snake.parentElement.className)
-const newIndex = currnetIndex + verticalSize
-console.log(newIndex)

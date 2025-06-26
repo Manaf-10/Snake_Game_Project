@@ -3,6 +3,7 @@ const gameBoard = document.getElementById('middle')
 const horizontalSize = 17
 const verticalSize = 17
 const boardSize = horizontalSize * verticalSize
+ball = document.createElement('div')// ball element
 const buttons = []
 let snakeArray = []
 let cellColor
@@ -10,7 +11,7 @@ let snakeSize = 0
 
 // Functions For Game Logic Here
 
-// A loop that creates a 17 by 17 grid and alternates between light green and dark green and assigns an id to each button
+// A loop that creates a grid based on the horizontalSize and verticalSize varibles, and alternates between two colors and assigns an id to each button
 const createGameBorder = () => {
     for (let i = 0; i < boardSize; i++) {
         cellColor = (i % 2 === 0) ? 'lightgreen' : 'darkgreen'
@@ -112,4 +113,11 @@ const increaseSnakeSize = () => {
 }
 
 increaseSnakeSize()
-increaseSnakeSize()
+
+
+
+// const SpawnFood = () => {
+//     const ballSpwanLocation = Math.floor(Math.random()*(buttons.length-1))+1 //generate a number between 1 and the number of buttons available
+    
+//     if(buttons[ballSpwanLocation].)
+// }

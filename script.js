@@ -4,7 +4,9 @@ const horizontalSize = 17
 const verticalSize = 17
 const boardSize = horizontalSize * verticalSize
 ball = document.createElement('div')// ball element
-const buttons = []
+ball.setAttribute('id','ball')
+ball.textContent = '⬤'
+let buttons = []
 let snakeArray = []
 let cellColor
 let snakeSize = 0
@@ -116,8 +118,15 @@ increaseSnakeSize()
 
 
 
-// const SpawnFood = () => {
-//     const ballSpwanLocation = Math.floor(Math.random()*(buttons.length-1))+1 //generate a number between 1 and the number of buttons available
-    
-//     if(buttons[ballSpwanLocation].)
-// }
+const SpawnBall = () => {
+    let ballSpwanLocation
+    while(true){
+        ballSpwanLocation = Math.floor(Math.random()*(buttons.length-1))+1 //generate a number between 1 and the number of buttons available
+    if(buttons[ballSpwanLocation].childNodes.length === 0 )
+        break
+    }
+    buttons[ballSpwanLocation].appendChild(ball)
+}
+
+SpawnBall()
+

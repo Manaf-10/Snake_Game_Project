@@ -8,8 +8,6 @@ ball.textContent = '⬤'
 let buttons = []
 let snakeArray = []
 let cellColor
-let snakeSize = 0
-console.log((boardSize - 1) / 2)
 let ballSpwanLocation
 let playerPoints = 0
 
@@ -58,12 +56,29 @@ let snakeHead = document.createElement('div')
 snakeHead.setAttribute("id", "snake")
 middleButton.appendChild(snakeHead)
 
-// A function that checks if the snake head position ate the ball; if yes, it will change the location of the ball and add 1 point to the player
+const increaseSnakeSize = () => {
+    const snakeBody = document.createElement('div')
+    snakeBody.setAttribute('id', 'snake-body')
+
+    // If the snake has no segments, start from the snake head
+    let lastBodyIndex = snakeArray.length > 0 
+        ? parseInt(snakeArray[snakeArray.length - 1].parentElement.className) 
+        : parseInt(snakeHead.parentElement.className)
+    // Calculate new index for the body segment
+    const newBodyIndex = lastBodyIndex + gameSideSize
+    // Check if the new index is within bounds
+    if (newBodyIndex >= 0 && newBodyIndex < buttons.length) {
+        buttons[newBodyIndex].appendChild(snakeBody)
+        snakeArray.push(snakeBody)
+    }
+}
+
+//add points to the player , increases the snake size and relocates the ball when the snake head reaches the location of the ball
 const relocateBall = snakeHeadPosition => {
     if (snakeHeadPosition === ballSpwanLocation) {
         SpawnBall()
         playerPoints++
-        console.log(playerPoints)
+increaseSnakeSize()
     }
 }
 ////////////////////////////////
@@ -92,8 +107,6 @@ const changePosition = (input, newPosition) => {
                 if (snakeArray.length > 0) {
                     buttons[currentIndex].appendChild(snakeArray[0])
                 }
-            } else {
-                console.error('New index out of bounds:', newIndex)
             }
         }
     })
@@ -112,21 +125,4 @@ changePosition('ArrowDown', gameSideSize) // Moving Down
 changePosition('ArrowLeft', -1) // Moving Left
 changePosition('ArrowRight', 1) // Moving Right
 
-const increaseSnakeSize = () => {
-    // assigns the last element of the snake array to the variable 
-    const snakeBody = document.createElement('div')
-    snakeBody.setAttribute('id', 'snake-body')
-    let lastBodyIndex = parseInt(snakeArray[snakeArray.length - 1].parentElement.className)
-    // Calculate new index for the body segment
-    const newBodyIndex = lastBodyIndex + gameSideSize
-    // Check if the new index is within bounds
-    if (newBodyIndex >= 0 && newBodyIndex < buttons.length) {
-        buttons[newBodyIndex].appendChild(snakeBody)
-        snakeArray.push(snakeBody)
-        snakeSize++
-    } else {
-        console.error('Index out of bounds:', newBodyIndex)
-    }
-}
-increaseSnakeSize()
-increaseSnakeSize()
+

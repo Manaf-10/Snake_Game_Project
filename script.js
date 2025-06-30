@@ -13,8 +13,8 @@ let playerPoints = 0//current points
 let bestPoints = 0// best points
 
 snakeHead.setAttribute("id", "snake")
-const currentScore = document.getElementsByClassName('current-score')[0]
-const bestScore = document.getElementsByClassName('best-score')[0]
+let currentScore = document.getElementsByClassName('current-score')[0]
+let bestScore = document.getElementsByClassName('best-score')[0]
 
 // creates a grid based on the gameSideSize variable, and alternates between two colors and assigns an id to each button
 const createGameBorder = () => {
@@ -27,6 +27,17 @@ const createGameBorder = () => {
         boxs.push(cell)
     }
 }
+//game lost functions , resets the necceresry variable
+const gameLost = ()=>{
+    currentScore = 0 //resets game score
+    for(let i =snakeArray.length-1 ;i >= 0;i--){
+        //iterates the snake array and removes the element from the DOM and the array
+        const segment = snakeArray[i];
+        segment.remove()
+        snakeArray.splice(i, 1)
+    }
+}
+
 createGameBorder()
 let middleButton = gameBoard.getElementsByClassName((boardSize - 1) / 2)[0]
 middleButton.appendChild(snakeHead)
@@ -57,8 +68,8 @@ declareSideButtons(gameSideSize - 1, boardSize, gameSideSize) // Last row
 declareSideButtons(((gameSideSize - 1) * gameSideSize), boardSize, 1) // Last column
 
 const increaseSnakeSize = () => {
-    const snakeBody = document.createElement('div')
-    snakeBody.setAttribute('id', 'snake-body')
+const snakeBody = document.createElement('div')
+snakeBody.setAttribute('id', 'snake-body')
 
     // If the snake has no segments, start from the snake head
     let lastBodyIndex = snakeArray.length > 0
@@ -98,7 +109,6 @@ const changePosition = (input, newPosition) => {
         if (e.code === input) {
             const currentIndex = parseInt(snakeHead.parentElement.className)
             const newIndex = currentIndex + newPosition
-
             // Check if the new index is within bounds
             if (newIndex >= 0 && newIndex < boxs.length) {
                 // Check if the new position is the same as the first snake body segment
@@ -125,7 +135,6 @@ const changePosition = (input, newPosition) => {
     })
 }
 
-
 // Generating a WASD and left,right,down,up arrows as input fields
 changePosition('KeyW', -gameSideSize) // Moving Up
 changePosition('KeyS', gameSideSize) // Moving Down
@@ -136,10 +145,4 @@ changePosition('ArrowUp', -gameSideSize) // Moving Up
 changePosition('ArrowDown', gameSideSize) // Moving Down
 changePosition('ArrowLeft', -1) // Moving Left
 changePosition('ArrowRight', 1) // Moving Right
-
-
-
-
-
-
 

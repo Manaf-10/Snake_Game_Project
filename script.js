@@ -7,16 +7,14 @@ ball.setAttribute('id', 'ball')
 ball.textContent = '⬤'
 let buttons = []
 let snakeArray = []
-let cellColor
 let ballSpwanLocation
 let playerPoints = 0
 
-// Functions For Game Logic Here
 
-// A loop that creates a grid based on the gameSideSize variable, and alternates between two colors and assigns an id to each button
+// creates a grid based on the gameSideSize variable, and alternates between two colors and assigns an id to each button
 const createGameBorder = () => {
     for (let i = 0; i < boardSize; i++) {
-        cellColor = (i % 2 === 0) ? 'lightgreen' : 'darkgreen'
+        let cellColor = (i % 2 === 0) ? 'lightgreen' : 'darkgreen'
         const cell = document.createElement('div')
         cell.style.backgroundColor = cellColor
         cell.setAttribute("class", i)
@@ -26,7 +24,7 @@ const createGameBorder = () => {
 }
 createGameBorder()
 
-// A function that declares the side buttons by taking the gameSideSize and the board size
+// declares the side buttons by taking the gameSideSize and the board size
 const declareSideButtons = (iteration, num, increase) => {
     for (let i = iteration; i < num; i += increase) {
         const cell = gameBoard.getElementsByClassName(i)[0]
@@ -78,13 +76,13 @@ const relocateBall = snakeHeadPosition => {
     if (snakeHeadPosition === ballSpwanLocation) {
         SpawnBall()
         playerPoints++
-increaseSnakeSize()
+        increaseSnakeSize()
     }
 }
 ////////////////////////////////
 // Event Listeners Here
 
-// A function that takes an input and the new vector the snake will be headed when that input is pressed
+// changes the direction of the snake based on the input
 const changePosition = (input, newPosition) => {
     window.addEventListener('keydown', e => {
         if (e.code === input) {
@@ -93,8 +91,13 @@ const changePosition = (input, newPosition) => {
 
             // Check if the new index is within bounds
             if (newIndex >= 0 && newIndex < buttons.length) {
+                // Check if the new position is the same as the first snake body segment
+                if (snakeArray.length !== 0 && buttons[newIndex].childNodes[0] === snakeArray[0]) {
+                    return // Do nothing if the snake head moves onto its body
+                }
+
                 // Move the snake head
-                buttons[newIndex].appendChild(snakeHead)
+                buttons[newIndex].appendChild(snakeHead);
                 relocateBall(newIndex)
 
                 // Move the snake body segments
@@ -114,7 +117,7 @@ const changePosition = (input, newPosition) => {
 
 const snakeHeadPosition = snakeHead.parentElement
 
-// When pressing a key, the vector of the snake changes
+// Generating a WASD and left,right,down,up arrows as input fields
 changePosition('KeyW', -gameSideSize) // Moving Up
 changePosition('KeyS', gameSideSize) // Moving Down
 changePosition('KeyA', -1) // Moving Left
@@ -124,5 +127,10 @@ changePosition('ArrowUp', -gameSideSize) // Moving Up
 changePosition('ArrowDown', gameSideSize) // Moving Down
 changePosition('ArrowLeft', -1) // Moving Left
 changePosition('ArrowRight', 1) // Moving Right
+
+
+
+
+
 
 

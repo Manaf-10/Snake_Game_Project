@@ -15,6 +15,7 @@ nav {
     grid-column: 1 / -1;
     text-align: center;
     justify-content: center;
+
 }
 
 #middle {
@@ -47,4 +48,7 @@ nav {
     background-color: blue;
     width: 100%;
     height: 100%;
+}
+nav p{
+padding: 13px;
 }

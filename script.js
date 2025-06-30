@@ -9,7 +9,11 @@ let buttons = []
 let snakeArray = []
 let ballSpwanLocation
 let playerPoints = 0
-
+let bestPoints = 0
+let snakeHead = document.createElement('div')
+snakeHead.setAttribute("id", "snake")
+const currentScore = document.getElementsByClassName('current-score')[0]
+const bestScore = document.getElementsByClassName('best-score')[0]
 
 // creates a grid based on the gameSideSize variable, and alternates between two colors and assigns an id to each button
 const createGameBorder = () => {
@@ -23,7 +27,8 @@ const createGameBorder = () => {
     }
 }
 createGameBorder()
-
+let middleButton = gameBoard.getElementsByClassName((boardSize - 1) / 2)[0]
+middleButton.appendChild(snakeHead)
 // declares the side buttons by taking the gameSideSize and the board size
 const declareSideButtons = (iteration, num, increase) => {
     for (let i = iteration; i < num; i += increase) {
@@ -49,10 +54,10 @@ declareSideButtons(0, boardSize, gameSideSize) // First column
 declareSideButtons(gameSideSize - 1, boardSize, gameSideSize) // Last row
 declareSideButtons(((gameSideSize - 1) * gameSideSize), boardSize, 1) // Last column
 
-let middleButton = gameBoard.getElementsByClassName((boardSize - 1) / 2)[0]
-let snakeHead = document.createElement('div')
-snakeHead.setAttribute("id", "snake")
-middleButton.appendChild(snakeHead)
+
+
+
+
 
 const increaseSnakeSize = () => {
     const snakeBody = document.createElement('div')
@@ -71,12 +76,20 @@ const increaseSnakeSize = () => {
     }
 }
 
-//add points to the player , increases the snake size and relocates the ball when the snake head reaches the location of the ball
+
 const relocateBall = snakeHeadPosition => {
+    // checks if the head of the snake is in the same location of the ball
     if (snakeHeadPosition === ballSpwanLocation) {
-        SpawnBall()
+        SpawnBall()//relocates the ball
+        //increases the players score when the snake gets the ball
         playerPoints++
-        increaseSnakeSize()
+        currentScore.textContent = "Current Score: "+playerPoints
+        //if the current score is more than the best score increases the best score
+        if(playerPoints > bestPoints){
+            bestPoints = playerPoints
+        }
+        bestScore.textContent = "Best Score: "+ bestPoints
+        increaseSnakeSize()//increases snake size if the ball is eaten
     }
 }
 ////////////////////////////////

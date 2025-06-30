@@ -1,16 +1,17 @@
 // Global Variables Here
-const gameBoard = document.getElementById('middle')
+const gameBoard = document.getElementById('middle')//game board
 const gameSideSize = 17 // Merged variable
-const boardSize = gameSideSize * gameSideSize
+const boardSize = gameSideSize * gameSideSize // game board size
 ball = document.createElement('div') // ball element
 ball.setAttribute('id', 'ball')
-ball.textContent = '⬤'
-let buttons = []
-let snakeArray = []
-let ballSpwanLocation
-let playerPoints = 0
-let bestPoints = 0
-let snakeHead = document.createElement('div')
+ball.textContent = '⬤' //ball shape
+let snakeHead = document.createElement('div')//snake head element
+let boxs = []//boxs array 
+let snakeArray = []//snake body array
+let ballSpawnLocation// ball spawn location
+let playerPoints = 0//current points
+let bestPoints = 0// best points
+
 snakeHead.setAttribute("id", "snake")
 const currentScore = document.getElementsByClassName('current-score')[0]
 const bestScore = document.getElementsByClassName('best-score')[0]
@@ -23,7 +24,7 @@ const createGameBorder = () => {
         cell.style.backgroundColor = cellColor
         cell.setAttribute("class", i)
         gameBoard.appendChild(cell)
-        buttons.push(cell)
+        boxs.push(cell)
     }
 }
 createGameBorder()
@@ -38,13 +39,14 @@ const declareSideButtons = (iteration, num, increase) => {
 }
 const SpawnBall = () => {
     while (true) {
-        ballSpwanLocation = Math.floor(Math.random() * (buttons.length - 1)) + 1 // generate a number between 1 and the number of buttons available
-        if (buttons[ballSpwanLocation].childNodes.length === 0
-            ||
-            buttons[ballSpwanLocation].className === (gameSideSize * gameSideSize - 1) / 2) // checks if the box the ball will spawn is either empty or the middle button(snake spawn location)
+        // generate a number between 1 and the number of buttons available
+        ballSpawnLocation = Math.floor(Math.random() * (boxs.length - 1)) + 1
+        // checks if box the ball will spawn is either empty or the middle button(snake spawn location)
+        if (boxs[ballSpawnLocation].childNodes.length === 0
+            || boxs[ballSpawnLocation].className === (gameSideSize * gameSideSize - 1) / 2)
             break
     }
-    buttons[ballSpwanLocation].appendChild(ball)
+    boxs[ballSpawnLocation].appendChild(ball)
 }
 
 SpawnBall()
@@ -54,24 +56,19 @@ declareSideButtons(0, boardSize, gameSideSize) // First column
 declareSideButtons(gameSideSize - 1, boardSize, gameSideSize) // Last row
 declareSideButtons(((gameSideSize - 1) * gameSideSize), boardSize, 1) // Last column
 
-
-
-
-
-
 const increaseSnakeSize = () => {
     const snakeBody = document.createElement('div')
     snakeBody.setAttribute('id', 'snake-body')
 
     // If the snake has no segments, start from the snake head
-    let lastBodyIndex = snakeArray.length > 0 
-        ? parseInt(snakeArray[snakeArray.length - 1].parentElement.className) 
+    let lastBodyIndex = snakeArray.length > 0
+        ? parseInt(snakeArray[snakeArray.length - 1].parentElement.className)
         : parseInt(snakeHead.parentElement.className)
     // Calculate new index for the body segment
     const newBodyIndex = lastBodyIndex + gameSideSize
     // Check if the new index is within bounds
-    if (newBodyIndex >= 0 && newBodyIndex < buttons.length) {
-        buttons[newBodyIndex].appendChild(snakeBody)
+    if (newBodyIndex >= 0 && newBodyIndex < boxs.length) {
+        boxs[newBodyIndex].appendChild(snakeBody)
         snakeArray.push(snakeBody)
     }
 }
@@ -79,7 +76,7 @@ const increaseSnakeSize = () => {
 
 const relocateBall = snakeHeadPosition => {
     // checks if the head of the snake is in the same location of the ball
-    if (snakeHeadPosition === ballSpwanLocation) {
+    if (snakeHeadPosition === ballSpawnLocation) {
         SpawnBall()//relocates the ball
         //increases the players score when the snake gets the ball
         playerPoints++
@@ -103,32 +100,31 @@ const changePosition = (input, newPosition) => {
             const newIndex = currentIndex + newPosition
 
             // Check if the new index is within bounds
-            if (newIndex >= 0 && newIndex < buttons.length) {
+            if (newIndex >= 0 && newIndex < boxs.length) {
                 // Check if the new position is the same as the first snake body segment
-                if (snakeArray.length !== 0 && buttons[newIndex].childNodes[0] === snakeArray[0]) {
+                if (snakeArray.length !== 0 && boxs[newIndex].childNodes[0] === snakeArray[0]) {
                     return // Do nothing if the snake head moves onto its body
                 }
 
                 // Move the snake head
-                buttons[newIndex].appendChild(snakeHead);
+                boxs[newIndex].appendChild(snakeHead);
                 relocateBall(newIndex)
 
                 // Move the snake body segments
                 for (let i = snakeArray.length - 1; i > 0; i--) {
                     const segmentIndex = parseInt(snakeArray[i - 1].parentElement.className)
-                    buttons[segmentIndex].appendChild(snakeArray[i])
+                    boxs[segmentIndex].appendChild(snakeArray[i])
                 }
 
                 // Move the first body segment to the previous head's position
                 if (snakeArray.length > 0) {
-                    buttons[currentIndex].appendChild(snakeArray[0])
+                    boxs[currentIndex].appendChild(snakeArray[0])
                 }
             }
         }
     })
 }
 
-const snakeHeadPosition = snakeHead.parentElement
 
 // Generating a WASD and left,right,down,up arrows as input fields
 changePosition('KeyW', -gameSideSize) // Moving Up

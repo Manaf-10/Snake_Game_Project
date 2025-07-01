@@ -27,7 +27,7 @@ const createGameBorder = () => {
         boxs.push(cell)
     }
 }
-//game lost functions , resets the necceresry variable
+//game lost functions, resets the necceresry variable
 const gameLost = ()=>{
     currentPoints = 0 //resets game score
     currentScore.textContent = "Current Score: "+currentPoints
@@ -37,6 +37,8 @@ const gameLost = ()=>{
         segment.remove()
         snakeArray.splice(i, 1)
     }
+    lastDirection = null //stops the snake movment
+    middleButton.appendChild(snakeHead) // returns the sanke to the middle
 
 }
 
@@ -115,34 +117,45 @@ const gameLoop = setInterval    (() => {
 
 const moveSnake = (direction) => {
     const currentIndex = parseInt(snakeHead.parentElement.className)
-    const newIndex = currentIndex + direction
+    let newIndex = currentIndex + direction
 
-    // Check if the new index is within bounds
-    if (newIndex >= 0 && newIndex < boxs.length) {
-        // Check if the new position is occupied by the first snake body segment
-        if (snakeArray.length > 0 && boxs[newIndex].childNodes[0] === snakeArray[0]) {
-            return // Allow moving onto the first body segment
-        }
-        // Check if the new position is occupied by any other body segment
-        else if (snakeArray.some(segment => boxs[newIndex].childNodes[0] === segment)) {
-            gameLost() // Call the game lost function
-            return // Stop further execution
-        }
+    // Horizontal wrapping
+    if (direction === 1 && newIndex % gameSideSize === 0) {
+        newIndex -= gameSideSize // Wrap to the left
+    } else if (direction === -1 && currentIndex % gameSideSize === 0) {
+        newIndex += gameSideSize // Wrap to the right
+    }
 
-        // Move the snake head
-        boxs[newIndex].appendChild(snakeHead)
-        relocateBall(newIndex)
+    // Vertical wrapping
+    if (newIndex < 0) {
+        newIndex += boardSize // Wrap to the bottom
+    } else if (newIndex >= boardSize) {
+        newIndex -= boardSize // Wrap to the top
+    }
 
-        // Move the snake body segments
-        for (let i = snakeArray.length - 1; i > 0; i--) {
-            const segmentIndex = parseInt(snakeArray[i - 1].parentElement.className)
-            boxs[segmentIndex].appendChild(snakeArray[i])
-        }
+    // Check if the new position is occupied by the first snake body segment
+    if (snakeArray.length > 0 && boxs[newIndex].childNodes[0] === snakeArray[0]) {
+        return // Allow moving onto the first body segment
+    }
+    // Check if the new position is occupied by any other body segment
+    else if (snakeArray.some(segment => boxs[newIndex].childNodes[0] === segment)) {
+        gameLost() // Call the game lost function
+        return // Stop further execution
+    }
 
-        // Move the first body segment to the previous head's position
-        if (snakeArray.length > 0) {
-            boxs[currentIndex].appendChild(snakeArray[0])
-        }
+    // Move the snake head
+    boxs[newIndex].appendChild(snakeHead)
+    relocateBall(newIndex)
+
+    // Move the snake body segments
+    for (let i = snakeArray.length - 1; i > 0; i--) {
+        const segmentIndex = parseInt(snakeArray[i - 1].parentElement.className)
+        boxs[segmentIndex].appendChild(snakeArray[i])
+    }
+
+    // Move the first body segment to the previous head's position
+    if (snakeArray.length > 0) {
+        boxs[currentIndex].appendChild(snakeArray[0])
     }
 }
 

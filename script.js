@@ -9,7 +9,7 @@ let snakeHead = document.createElement('div')//snake head element
 let boxs = []//boxs array 
 let snakeArray = []//snake body array
 let ballSpawnLocation// ball spawn location
-let playerPoints = 0//current points
+let currentPoints = 0//current points
 let bestPoints = 0// best points
 
 snakeHead.setAttribute("id", "snake")
@@ -29,13 +29,15 @@ const createGameBorder = () => {
 }
 //game lost functions , resets the necceresry variable
 const gameLost = ()=>{
-    currentScore = 0 //resets game score
+    currentPoints = 0 //resets game score
+    currentScore.textContent = "Current Score: "+currentPoints
     for(let i =snakeArray.length-1 ;i >= 0;i--){
         //iterates the snake array and removes the element from the DOM and the array
-        const segment = snakeArray[i];
+        const segment = snakeArray[i]
         segment.remove()
         snakeArray.splice(i, 1)
     }
+
 }
 
 createGameBorder()
@@ -90,11 +92,11 @@ const relocateBall = snakeHeadPosition => {
     if (snakeHeadPosition === ballSpawnLocation) {
         SpawnBall()//relocates the ball
         //increases the players score when the snake gets the ball
-        playerPoints++
-        currentScore.textContent = "Current Score: "+playerPoints
+        currentPoints++
+        currentScore.textContent = "Current Score: "+currentPoints
         //if the current score is more than the best score increases the best score
-        if(playerPoints > bestPoints){
-            bestPoints = playerPoints
+        if(currentPoints > bestPoints){
+            bestPoints = currentPoints
         }
         bestScore.textContent = "Best Score: "+ bestPoints
         increaseSnakeSize()//increases snake size if the ball is eaten
@@ -104,38 +106,55 @@ const relocateBall = snakeHeadPosition => {
 // Event Listeners Here
 
 // changes the direction of the snake based on the input
+let lastDirection = null // Store the last direction
+const gameLoop = setInterval    (() => {
+    if (lastDirection) {
+        moveSnake(lastDirection) // Move the snake in the last direction
+    }
+}, 100) // Adjust the interval time as needed
+
+const moveSnake = (direction) => {
+    const currentIndex = parseInt(snakeHead.parentElement.className)
+    const newIndex = currentIndex + direction
+
+    // Check if the new index is within bounds
+    if (newIndex >= 0 && newIndex < boxs.length) {
+        // Check if the new position is occupied by the first snake body segment
+        if (snakeArray.length > 0 && boxs[newIndex].childNodes[0] === snakeArray[0]) {
+            return // Allow moving onto the first body segment
+        }
+        // Check if the new position is occupied by any other body segment
+        else if (snakeArray.some(segment => boxs[newIndex].childNodes[0] === segment)) {
+            gameLost() // Call the game lost function
+            return // Stop further execution
+        }
+
+        // Move the snake head
+        boxs[newIndex].appendChild(snakeHead)
+        relocateBall(newIndex)
+
+        // Move the snake body segments
+        for (let i = snakeArray.length - 1; i > 0; i--) {
+            const segmentIndex = parseInt(snakeArray[i - 1].parentElement.className)
+            boxs[segmentIndex].appendChild(snakeArray[i])
+        }
+
+        // Move the first body segment to the previous head's position
+        if (snakeArray.length > 0) {
+            boxs[currentIndex].appendChild(snakeArray[0])
+        }
+    }
+}
+
 const changePosition = (input, newPosition) => {
     window.addEventListener('keydown', e => {
         if (e.code === input) {
-            const currentIndex = parseInt(snakeHead.parentElement.className)
-            const newIndex = currentIndex + newPosition
-            // Check if the new index is within bounds
-            if (newIndex >= 0 && newIndex < boxs.length) {
-                // Check if the new position is the same as the first snake body segment
-                if (snakeArray.length !== 0 && boxs[newIndex].childNodes[0] === snakeArray[0]) {
-                    return // Do nothing if the snake head moves onto its body
-                }
-
-                // Move the snake head
-                boxs[newIndex].appendChild(snakeHead);
-                relocateBall(newIndex)
-
-                // Move the snake body segments
-                for (let i = snakeArray.length - 1; i > 0; i--) {
-                    const segmentIndex = parseInt(snakeArray[i - 1].parentElement.className)
-                    boxs[segmentIndex].appendChild(snakeArray[i])
-                }
-
-                // Move the first body segment to the previous head's position
-                if (snakeArray.length > 0) {
-                    boxs[currentIndex].appendChild(snakeArray[0])
-                }
-            }
+            lastDirection = newPosition // Set the last direction based on the key pressed
         }
     })
 }
 
-// Generating a WASD and left,right,down,up arrows as input fields
+// Generating a WASD and left, right, down, up arrows as input fields
 changePosition('KeyW', -gameSideSize) // Moving Up
 changePosition('KeyS', gameSideSize) // Moving Down
 changePosition('KeyA', -1) // Moving Left
@@ -145,4 +164,5 @@ changePosition('ArrowUp', -gameSideSize) // Moving Up
 changePosition('ArrowDown', gameSideSize) // Moving Down
 changePosition('ArrowLeft', -1) // Moving Left
 changePosition('ArrowRight', 1) // Moving Right
+
 

@@ -111,7 +111,7 @@ const gameLoop = setInterval    (() => {
     if (lastDirection) {
         moveSnake(lastDirection) // Move the snake in the last direction
     }
-}, 100) // Adjust the interval time as needed
+}, 150) // snake speed rate
 
 const moveSnake = (direction) => {
     const currentIndex = parseInt(snakeHead.parentElement.className)

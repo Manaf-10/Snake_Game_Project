@@ -51,7 +51,8 @@ A snake game where the player controls a snake that eats a ball to grow longer a
 
 
 ### Screenshots
-
+![game board](game_board.png)
+![game menu](game_menu.png)
 
 ### Future Updates
 - [ ] Add levels with increasing difficulty

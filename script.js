@@ -17,6 +17,7 @@ let bestPoints = localStorage.getItem('bestScore') ? parseInt(localStorage.getIt
 snakeHead.setAttribute("id", "snake")
 let currentScore = document.getElementsByClassName('current-score')[0]
 let bestScore = document.getElementsByClassName('best-score')[0]
+let lastDirection = null // Store the last direction
 // Initialize scores display
 currentScore.textContent = "Current Score: " + currentPoints
 bestScore.textContent = "Best Score: " + bestPoints
@@ -108,14 +109,16 @@ const relocateBall = (snakeHeadPosition) => {
     }
 }
 
-let lastDirection = null // Store the last direction
+
 const gameLoop = setInterval(() => {
     if (lastDirection) {
         moveSnake(lastDirection) // Move the snake in the last direction
     }
-}, 150) // snake speed rate
+}, 250) // snake speed rate
 
 const moveSnake = (direction) => {
+   
+
     const currentIndex = parseInt(snakeHead.parentElement.className)
     let newIndex = currentIndex + direction
 
@@ -133,9 +136,13 @@ const moveSnake = (direction) => {
         newIndex -= boardSize // Wrap to the top
     }
 
-    if (snakeArray.length > 0 && boxs[newIndex].childNodes[0] === snakeArray[0]) {
-        return // Allow moving onto the first body segment
-    } else if (snakeArray.some(segment => boxs[newIndex].childNodes[0] === segment)) {
+    // Check if the new position is the neck (last segment)
+    if (snakeArray.length > 0 && newIndex === parseInt(snakeArray[0].parentElement.className)) {
+        return // Do nothing if trying to move into the neck
+    }
+
+    // Check for collision with the snake body
+    if (snakeArray.some(segment => boxs[newIndex].childNodes[0] === segment)) {
         gameLost() // Call the game lost function
         return // Stop further execution
     }
@@ -154,11 +161,22 @@ const moveSnake = (direction) => {
     if (snakeArray.length > 0) {
         boxs[currentIndex].appendChild(snakeArray[0])
     }
+
+    // Update the last direction
+    lastDirection = direction
 }
+
 
 const changePosition = (input, newPosition) => {
     window.addEventListener('keydown', e => {
         if (e.code === input) {
+            // Check if the new position is opposite to the last direction (prevents the snake from going on its 'neck')
+            if ((lastDirection === -gameSideSize && newPosition === gameSideSize) || 
+                (lastDirection === gameSideSize && newPosition === -gameSideSize) || 
+                (lastDirection === -1 && newPosition === 1) || 
+                (lastDirection === 1 && newPosition === -1)) {
+                return // Ignore the move
+            }
             lastDirection = newPosition // Set the last direction based on the key pressed
         }
     })

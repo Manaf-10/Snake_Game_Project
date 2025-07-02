@@ -1,4 +1,3 @@
-// Global Variables Here
 const gameBoard = document.getElementById('middle') // game board
 const gameSideSize = 17 // Merged variable
 const boardSize = gameSideSize * gameSideSize // game board size
@@ -11,12 +10,17 @@ let snakeHead = document.createElement('div') // snake head element
 let boxs = [] // boxs array
 let snakeArray = [] // snake body array
 let ballSpawnLocation // ball spawn location
-let currentPoints = 0 // current points
-let bestPoints = 0 // best points
+let currentPoints = 0// current points
+let bestPoints = localStorage.getItem('bestScore') ? parseInt(localStorage.getItem('bestScore')) : 0 // Load best score from localStorage
 
 snakeHead.setAttribute("id", "snake")
 let currentScore = document.getElementsByClassName('current-score')[0]
 let bestScore = document.getElementsByClassName('best-score')[0]
+
+// Initialize scores display
+currentScore.textContent = "Current Score: " + currentPoints
+bestScore.textContent = "Best Score: " + bestPoints
+
 
 // Creates a grid based on the gameSideSize variable
 const createGameBorder = () => {
@@ -86,15 +90,18 @@ const increaseSnakeSize = () => {
     }
 }
 
-const relocateBall = snakeHeadPosition => {
+const relocateBall = (snakeHeadPosition) => {
     if (snakeHeadPosition === ballSpawnLocation) {
         SpawnBall() // relocates the ball
         currentPoints++
         currentScore.textContent = "Current Score: " + currentPoints
+        
+        // Save new best score if currentPoints exceed bestPoints
         if (currentPoints > bestPoints) {
             bestPoints = currentPoints
+            localStorage.setItem('bestScore', bestPoints) // Save new best score
         }
-        bestScore.textContent = "Best Score: " + bestPoints
+        bestScore.textContent = "Best Score: " + bestPoints // Update displayed best score
         increaseSnakeSize() // increases snake size if the ball is eaten
     }
 }
@@ -172,9 +179,10 @@ darkThemeButton.addEventListener('click', () => {
     navigation.classList.toggle('dark-theme')
     for (let i = 0; i < boxs.length; i++) {
         if (document.body.classList.contains('dark-theme')) {
-            boxs[i].style.backgroundColor = (i % 2 === 0) ? 'darkgray' : 'lightgray';
+            boxs[i].style.backgroundColor = (i % 2 === 0) ? 'darkgray' : 'lightgray'
         } else {
-            boxs[i].style.backgroundColor = (i % 2 === 0) ? 'lightgreen' : 'darkgreen';
+            boxs[i].style.backgroundColor = (i % 2 === 0) ? 'lightgreen' : 'darkgreen'
         }
     }
 })
+

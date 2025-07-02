@@ -1,0 +1,25 @@
+body {
+    margin: 0;
+    height: 100vh; 
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    background-color: #339c13; 
+}
+
+#play-title {
+    font-size: 2rem; 
+}
+
+#play-title a {
+    text-decoration: none; 
+    color: white; 
+    background-color: #4CAF50;
+    padding: 15px 30px; 
+    border-radius: 5px; 
+    transition: background-color 0.3s; 
+}
+
+#play-title a:hover {
+    background-color: #45a049; 
+}

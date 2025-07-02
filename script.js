@@ -1,3 +1,5 @@
+//globel variables
+////////////////////
 const gameBoard = document.getElementById('middle') // game board
 const gameSideSize = 17 // Merged variable
 const boardSize = gameSideSize * gameSideSize // game board size
@@ -12,16 +14,16 @@ let snakeArray = [] // snake body array
 let ballSpawnLocation // ball spawn location
 let currentPoints = 0// current points
 let bestPoints = localStorage.getItem('bestScore') ? parseInt(localStorage.getItem('bestScore')) : 0 // Load best score from localStorage
-
 snakeHead.setAttribute("id", "snake")
 let currentScore = document.getElementsByClassName('current-score')[0]
 let bestScore = document.getElementsByClassName('best-score')[0]
-
 // Initialize scores display
 currentScore.textContent = "Current Score: " + currentPoints
 bestScore.textContent = "Best Score: " + bestPoints
 
 
+//functions
+////////////////////
 // Creates a grid based on the gameSideSize variable
 const createGameBorder = () => {
     for (let i = 0; i < boardSize; i++) {

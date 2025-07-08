@@ -3,6 +3,7 @@
 ### Date: [30/06/2025]
 ### By: [Manaf Hujairi]
 
+ snake_game_project.surge.sh
 
 ### Description
 A snake game where the player controls a snake that eats a ball to grow longer and earn points. If the snake's head collides with its own body, the player loses, and the level resets.
